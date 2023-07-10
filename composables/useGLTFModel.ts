@@ -4,7 +4,8 @@ export default function() {
     const gltfLoader = new GLTFLoader()
     interface model {
         scene?: any,
-        asset?: any
+        asset?: any,
+        animations?: any
     }
 
     function load(url: string) {
@@ -13,7 +14,14 @@ export default function() {
         })
     }
 
+    function parse(buffer: ArrayBufferLike) {
+        return new Promise<model>((resolve, reject) => {
+            gltfLoader.parse(buffer, '', resolve, reject)
+        })
+    }
+
     return {
         load,
+        parse
     }
 }

@@ -9,6 +9,9 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^3.4.6",
+    "@gltf-transform/extensions": "^3.4.6",
+    "@gltf-transform/functions": "^3.4.6",
     "@types/node": "^18",
     "@types/three": "^0.152.1",
     "@vueuse/core": "^10.1.2",
