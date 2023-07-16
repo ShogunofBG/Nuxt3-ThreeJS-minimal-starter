@@ -6,11 +6,9 @@
 
 <script setup lang="ts">
 import { Scene, WebGL1Renderer } from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 
 let renderer: WebGL1Renderer
-let controls: OrbitControls
 const exp = ref<HTMLCanvasElement | null>(null)
 
 // Scene
@@ -20,6 +18,9 @@ const scene = new Scene()
 const { perspectiveCamera: camera, perspCamHelper: camHelper } = useCamera()
 scene.add(camera)
 scene.add(camHelper)
+
+// Camera Controls
+const { initOrbitControls, updateCameraControls } = useCameraControls()
 
 // Lighting
 const { ambientLight, directionalLight } = useLighting()
@@ -41,8 +42,7 @@ function setRenderer() {
         })
         renderer.setPixelRatio(window.devicePixelRatio)
         renderer.setSize(window.innerWidth, window.innerHeight)
-        controls = new OrbitControls(camera, renderer.domElement)
-        controls.enableDamping = true
+        initOrbitControls(camera, renderer.domElement)
     }
 }
 
@@ -70,7 +70,7 @@ function updateCamera() {
 
 // Loop
 const loop = () => {
-    controls.update()
+    updateCameraControls()
     requestAnimationFrame(loop)
     renderer.render(scene, camera)
 }
