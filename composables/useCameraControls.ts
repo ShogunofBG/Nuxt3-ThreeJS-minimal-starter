@@ -6,6 +6,7 @@ import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonCont
 import { FlyControls } from "three/examples/jsm/controls/FlyControls";
 import { MapControls } from "three/examples/jsm/controls/MapControls";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 
 export default function() {
     let orbitControls: OrbitControls
@@ -14,6 +15,7 @@ export default function() {
     let flyControls: FlyControls
     let mapControls: MapControls
     let trackballControls: TrackballControls
+    let pointerLockControls: PointerLockControls
 
     // Orbit Controls
     function initOrbitControls(camera: Camera, domElement: HTMLElement) {
@@ -53,6 +55,12 @@ export default function() {
         // add custom settings here
     }
 
+    // Pointer Lock Controls
+    function initPointerLockControls(camera: Camera, domElement: HTMLElement) {
+        pointerLockControls = new PointerLockControls(camera, domElement)
+        // add custom settings here
+    }
+
     // Update Functions
     function updateCameraControls() {
         if (orbitControls) orbitControls.update()
@@ -72,6 +80,7 @@ export default function() {
         initFirstPersonControls,
         initFlyControls,
         initMapControls,
+        initPointerLockControls,
         initTrackballControls,
         updateCameraControls,
         updateCameraControlsDelta
