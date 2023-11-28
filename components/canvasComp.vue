@@ -15,17 +15,24 @@ const exp = ref<HTMLCanvasElement | null>(null)
 const scene = new Scene()
 
 // Camera
-const { perspectiveCamera: camera, perspCamHelper: camHelper } = useCamera()
-scene.add(camera)
-scene.add(camHelper)
+const { width, height } = useWindowSize()
+const aspectRatio = computed(() => width.value / height.value)
+
+const { initPerspectiveCamera } = useCamera()
+const { camera, camHelper } = initPerspectiveCamera(0, 100, 250, 75, aspectRatio.value, 0.1, 1000)
+scene.add(camera, camHelper)
 
 // Camera Controls
 const { initOrbitControls, updateCameraControls } = useCameraControls()
 
 // Lighting
-const { ambientLight, directionalLight } = useLighting()
-scene.add(ambientLight)
-scene.add(directionalLight)
+const { initPointLight, initAmbientLight, initDirectionalLight } = useLighting()
+const DL1 = initDirectionalLight(0, 500, 1000, 0xB5A00B, .5)
+const DL2 = initDirectionalLight(0, -500, -1000, 0x9420A3, .5)
+const ambientLight = initAmbientLight(0xFFFFFF, .05)
+const PL1 = initPointLight(0, -50, 0, 0x9420A3, 1, 1200, 2)
+const PL2 = initPointLight(0, 50, 0, 0xB5A00B, 1, 1200, 2)
+scene.add(DL1, DL2, PL1, PL2, ambientLight)
 
 // GLTF Model
 const { load } = useGLTFModel()
@@ -47,8 +54,6 @@ function setRenderer() {
 }
 
 // Camera Functions
-const { width, height } = useWindowSize()
-const aspectRatio = computed(() => width.value / height.value)
 
 function updateRenderer() {
     renderer.setSize(width.value, height.value)
@@ -59,11 +64,11 @@ function updateCamera() {
     if (camera.type === "PerspectiveCamera") {
         camera.aspect = aspectRatio.value
     }
-    if (camera.type === "OrthographicCamera") {
-        const frustumSize = camera.userData?.frustumSize
-        camera.left = frustumSize * aspectRatio.value / -2
-        camera.right = frustumSize * aspectRatio.value / 2
-    }
+    // if (camera.type === "OrthographicCamera") {
+    //     const frustumSize = camera.userData?.frustumSize
+    //     camera.left = frustumSize * aspectRatio.value / -2
+    //     camera.right = frustumSize * aspectRatio.value / 2
+    // }
     camera.updateProjectionMatrix()
     camHelper.update()
 }
@@ -83,7 +88,6 @@ watch(aspectRatio, () => {
 onMounted(() => {
     setRenderer()
     loop()
-    console.log(camera)
 })
 
 </script>
